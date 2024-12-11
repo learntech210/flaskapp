@@ -1,0 +1,145 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt 
+import pickle
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.preprocessing import StandardScaler
+
+df = pd.read_csv('lt.csv.csv')
+df.head()
+
+
+df = pd.read_csv('lt.csv.csv')
+df.head()
+
+df.info()
+
+df.describe
+
+df.sample(10)
+
+
+df.shape
+
+df.loc[6:10,['Education','LoanAmount','Loan_Status']]
+
+
+df.set_index("Loan_ID")
+
+df["Dependents"].value_counts()
+
+df["Education"].value_counts()
+
+df["Credit_History"].value_counts()
+
+df["Property_Area"].value_counts()
+
+df["Loan_Status"].value_counts()
+
+df.drop(["Loan_ID"],axis="columns",inplace=True)
+df.drop(["ApplicantIncome"],axis="columns",inplace=True)
+
+
+df
+
+
+df.dropna(inplace=True)
+
+df
+
+df[df.Loan_Status == 1].shape
+
+df[df.Loan_Status ==0].shape
+
+
+df['Education'] = df['Education'].replace({'Graduate': 1, "Not Graduate": 0})
+
+df
+
+df['Education'] = df['Education'].replace({'Graduate': 1, "Not Graduate": 0})
+
+df
+
+df['Property_Area'] = pd.factorize(df['Property_Area'])[0] + 1
+
+
+
+df
+
+df['Loan_Status'] = df['Loan_Status'].replace({'Y': 1, 'N': 0})
+
+df
+
+df["LoanAmount"] = pd.to_numeric(df['LoanAmount'], errors='coerce').astype(int)
+
+df
+
+df["LoanAmount"] = df.LoanAmount*1000
+
+
+df
+
+
+scaler = StandardScaler()
+df[["LoanAmount"]] = scaler.fit_transform(df[["LoanAmount"]])
+
+
+pd.crosstab(df['Education'], df.Loan_Status).plot(kind="bar")
+pd.crosstab(df['Credit_History'], df.Loan_Status).plot(kind="bar")
+pd.crosstab(df['Property_Area'], df.Loan_Status).plot(kind="bar")
+
+
+x=df.drop(["Loan_Status"],axis=1)
+
+
+y=df["Loan_Status"]
+
+x
+y
+
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=64)
+
+classifier=LogisticRegression(random_state=0)
+
+classifier.fit(x_train,y_train)
+
+regression = LogisticRegression(C=1, penalty='l1', solver='liblinear')
+regression.fit(x_train, y_train)
+regression.score(x_test, y_test)
+
+#Predicting the test set result
+y_pred= classifier.predict(x_test)  
+
+
+from sklearn.metrics import confusion_matrix
+cm=confusion_matrix(y_test,y_pred)
+
+
+cm
+
+pickle.dump(regression, open('logisticloan.pkl','wb'))
+
+pickled_model = pickle.load(open('logisticloan.pkl', 'rb'))
+pickled_model.predict(x_test)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
